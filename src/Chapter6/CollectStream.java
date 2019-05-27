@@ -55,15 +55,25 @@ public class CollectStream {
         String shortMenu = menu.stream().map(Dish::getName).collect(joining(","));
         System.out.println(shortMenu);
 
+//        menu.stream().collect(reducing(((o, o2) ->  o.getName()+ o2.getName()))).get();
+//        The above line will not work as one argument that reducing accepts is a  BinaryOperator<T> that’s a BiFunction<T,T,T>
+//        That is 2 arguments and 1 return type all should be same
+//        reducing can take
+//          1) BinaryOperator<T> op -> BiFunction<T,T,T> ---------------- on line 73
+//          2) T identity, BinaryOperator<T> op ----------- on line 67
+//          3) U identity, Function<? extends T, ? extends U> mapper, BinaryOperator<U> op --------- on line 77
+
         System.out.println("--------------GENERAL REDUCING----------------------------");
         int reduceTotCal = menu.stream().collect(reducing(0, Dish::getCalories, (i, j) -> i + j));
-        // reducing takes 3 arguments
-        // 1. Initial Value 2.Int transofmation 3.Binary reduction peoration
         System.out.println("USING GENERAL REDUCING "+reduceTotCal);
 
         Optional<Dish> mostCalorieDish = menu.stream()
                 .collect(reducing((o, o2) -> o.getCalories() > o2.getCalories()? o:o2));
         //Perl style please don't do it
+
+        int reduceTotCal3 = menu.stream()
+                                .collect(reducing(0, Dish::getCalories, (c1, c2) -> c1+c2));
+        System.out.println("STYLE 3 reducing "+ reduceTotCal3);
 
         System.out.println("-----------------------GROUPING-----------------------------");
 
