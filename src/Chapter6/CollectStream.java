@@ -123,6 +123,71 @@ public class CollectStream {
                 ));
         System.out.println(dishByTypeCaloricLevel);
 
+        System.out.println("-------------------COLLECT DATA IN GROUPING-------------------");
+        Map<Type, Long> typesCount = menu.stream()
+                .collect(groupingBy(Dish::getType, counting()));
+        System.out.println("Count GROUP BY"+typesCount);
 
+        Map<Type, Optional<Dish>> maxCaloricByType = menu.stream()
+                .collect(groupingBy(Dish::getType, maxBy(Comparator.comparingInt(Dish::getCalories))));
+        System.out.println("Max GROUP BY"+ maxCaloricByType);
+
+        System.out.println("-------------HIGHEST CALORIE DISH GROUPWISE WO OPTIONAL--------------");
+        /*
+        This factory method takes two arguments, the collector to be adapted and a transformation
+        function, and returns another collector.
+        */
+        Map<Type, Dish> mostCaloricByPtype = menu.stream()
+                .collect(groupingBy(Dish::getType,
+                        collectingAndThen(
+                                maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get
+                        )));
+
+        mostCaloricByPtype.forEach((type, dish) -> System.out.println(type +"->" +dish));
+
+        System.out.println("--------------------SUM ALL CALORIES GROUPWISE---------------------");
+        Map<Type, Integer> totalCaloriesByType = menu.stream()
+                .collect(groupingBy(Dish::getType,
+                        summingInt(Dish::getCalories)));
+        System.out.println(totalCaloriesByType);
+
+
+        System.out.println("-------------------------MAPPING----------------------------------");
+        Map<Type, Set<CaloricLevel>> caloricLevelsByType = menu.stream()
+                .collect(groupingBy(Dish::getType,
+                        mapping(dish -> {
+                            if (dish.getCalories() < 400) return CaloricLevel.DIET;
+                            else if (dish.getCalories() < 700) return CaloricLevel.NORMAL;
+                            else return CaloricLevel.FAT;
+                        }, toSet())));
+        System.out.println(caloricLevelsByType);
+
+        System.out.println("---------------------PARTITIONING----------------------------------");
+        /*
+        Partitioning is a special kind of grouping.
+        It has a Predicate in partitioningBy, remember groupBy had Function<T,R>
+        And IntelliJ is smart enough to suggest you from your Dish, only isVeg reference can go there
+        * */
+
+        Map<Boolean, List<Dish>> partitionedMenu = menu.stream()
+                .collect(partitioningBy(Dish::isVegetarian));
+        System.out.println(partitionedMenu);
+
+//        List<Dish> vegitarianDishes = menu.stream().filter(Dish::isVegetarian).collect(toList());
+        System.out.println("-----------PARTITION VEG----------- GROUP BY TYPE--------------");
+        Map<Boolean, Map<Type, List<Dish>>> vegitarianDishesByType = menu.stream()
+                .collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+        System.out.println(vegitarianDishesByType);
+
+        Map<Boolean, Dish> mostCaloricPartitionedByVegetarian = menu.stream()
+                .collect(partitioningBy(Dish::isVegetarian,
+                        collectingAndThen(maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
+        System.out.println(mostCaloricPartitionedByVegetarian);
+
+//        Map<Boolean, Optional<Dish>> collect = menu.stream().collect(groupingBy(Dish::isVegetarian,
+//                maxBy(Comparator.comparingInt(Dish::getCalories)))); THE Optional version
+
+        Map<Boolean, Long> vegNonVegCount = menu.stream().collect(partitioningBy(Dish::isVegetarian, counting()));
+        System.out.println(vegNonVegCount);
     }
 }
