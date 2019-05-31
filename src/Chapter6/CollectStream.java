@@ -4,7 +4,9 @@ import Chapter4.Dish;
 import Chapter4.Type;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 
@@ -189,5 +191,27 @@ public class CollectStream {
 
         Map<Boolean, Long> vegNonVegCount = menu.stream().collect(partitioningBy(Dish::isVegetarian, counting()));
         System.out.println(vegNonVegCount);
+
+        System.out.println("------------------------IDENTITY---------------------------------");
+        List<Integer> integerList = Arrays.asList(1,2,3,4,5,3,4,2,1,3,6,7,8,7,6,8,6,5,4,2,3,4,7,9,5,4,1,2,1);
+
+        Integer maxKey = integerList.stream()
+                .collect(groupingBy(Function.identity(), counting()))  //{1=4, 2=4, 3=4, 4=5, 5=3, 6=3, 7=3, 8=2, 9=1}
+                .entrySet()  // Convert it into set so that stream operation can be applied again
+                .stream()
+                .max(Comparator.comparing(Map.Entry::getValue))
+                .get()
+                .getKey();
+        System.out.println("MOST RECURRING KEY IN LIST IS "+maxKey);
+
+        Integer maxKey1 = integerList.stream()
+                .collect(groupingBy(Function.identity(), counting()))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .get()
+                .getKey();
+        System.out.println("MOST RECURRING KEY IN LIST IS "+maxKey1);
+
     }
 }
