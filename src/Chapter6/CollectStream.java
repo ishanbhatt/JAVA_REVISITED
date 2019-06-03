@@ -213,5 +213,10 @@ public class CollectStream {
                 .getKey();
         System.out.println("MOST RECURRING KEY IN LIST IS "+maxKey1);
 
+        System.out.println("--------------A LOT TO READ FOR THIS ONE AND MAKE NOTES TOO----------------");
+        System.out.println("------------------------USING CUSTOM COLLECTOR-----------------------------");
+        List<Dish> customCollect = menu.stream().collect(new ToListCollector<>());
+        System.out.println(customCollect);
+
     }
 }
