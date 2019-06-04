@@ -4,7 +4,9 @@ import Chapter4.Dish;
 import Chapter4.Type;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -217,6 +219,7 @@ public class CollectStream {
         System.out.println("------------------------USING CUSTOM COLLECTOR-----------------------------");
         List<Dish> customCollect = menu.stream().collect(new ToListCollector<>());
         System.out.println(customCollect);
+
 
     }
 }

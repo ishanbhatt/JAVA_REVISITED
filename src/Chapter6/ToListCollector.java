@@ -11,25 +11,27 @@ public class ToListCollector<T> implements Collector<T, List<T>, List<T>> {
 
     @Override
     public Supplier<List<T>> supplier() {
-        System.out.println("SUPPLIER");
+//        Creates an empty accumulator, which will be used further down
         return ArrayList::new;
     }
 
     @Override
     public BiConsumer<List<T>, T> accumulator() {
-        System.out.println("ACCUMULATOR");
+//        accumulates the results into accumulator returned by supplier, returns void
         return List::add;
     }
 
     @Override
     public Function<List<T>, List<T>> finisher() {
-        System.out.println("FINISHER");  // This won't get called as characteristic is having IDENTITY
+//        Function to be called after the end of accumulation after completely traversing the stream
+//         This won't get called as characteristic is having IDENTITY
         return w->w;  // Function.identity() can also be used
     }
 
     @Override
     public BinaryOperator<List<T>> combiner() {
-        System.out.println("COMBINER");
+//        THis would not have been called of CONCURRENT characteristics wasn't set
+//        To combine results of the multiple streams
         return (ts, ts2) -> {
             ts.addAll(ts2);
             return ts;
