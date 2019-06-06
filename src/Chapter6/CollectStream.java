@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -25,6 +26,13 @@ public class CollectStream {
     * */
 
     public enum CaloricLevel {DIET, NORMAL, FAT}
+
+    public static Map<Boolean,List<Integer>> partitionPrimes(int n) {
+
+        return IntStream.rangeClosed(2,n)
+                .boxed()
+                .collect(new PrimesCollector());
+    }
 
     public static void main(String[] args) {
         List<Dish> menu = Arrays.asList(
@@ -220,6 +228,7 @@ public class CollectStream {
         List<Dish> customCollect = menu.stream().collect(new ToListCollector<>());
         System.out.println(customCollect);
 
-
+        System.out.println("---------------------CUSTOM PRIMES COLLECTOR--------------------------------");
+        System.out.println(partitionPrimes(19));
     }
 }
