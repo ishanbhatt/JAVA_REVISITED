@@ -7,7 +7,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class ToListCollector<T> implements Collector<T, List<T>, List<T>> {
+// If we remove type information from here , the code using this collector breaks as it can't infer the types
+// As it will use original Collector's <T,A,R> which arent bound to anything
+public class ToListCollector<T> implements Collector <T, List<T>, List<T>>{
 
     @Override
     public Supplier<List<T>> supplier() {

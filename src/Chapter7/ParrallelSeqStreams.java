@@ -1,5 +1,7 @@
 package Chapter7;
 
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.function.Function;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -63,6 +65,17 @@ public class ParrallelSeqStreams {
         return accumulator.total;
     }
 
+    /*
+    * Here, the performance is worse than the version using the parallel stream, but only because
+    you’re obliged to put the whole stream of numbers into a long[] before being allowed to use it in
+    the ForkJoinSumCalculator task.
+    * */
+    public static long forkJoinSum(long n) {
+        long[] numbers = LongStream.rangeClosed(1,n).toArray();
+        ForkJoinTask<Long> task = new ForkJoinSumCalculator(numbers);
+        return new ForkJoinPool().invoke(task);
+    }
+
     public static void main(String[] args) {
 //        DO not combine .sequential(), .parallel() in one operation
 //        the last one wins and that would be the nature of the operation
@@ -85,5 +98,9 @@ public class ParrallelSeqStreams {
         System.out.println("RANGE PAR "+rangeParTime);
 
         System.out.println(sideEffecSum(10_000));
+
+        System.out.println("--------------------------FORK JOIN SUM-------------------------------");
+        System.out.println("USING FORK JOIN "+ measureSumPerf(ParrallelSeqStreams::forkJoinSum, 10_000_000));
+
     }
 }
