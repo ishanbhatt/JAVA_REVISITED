@@ -31,11 +31,11 @@ public class Shop {
         return new Random().nextDouble() * product.charAt(0) + product.charAt(1);
     }
 
-    /* NORMAL Version
+//    NORMAL Version
     public double getPrice(String product) {
         return calculatePrice(product);
     }
-    */
+
 
     public Future<Double> gerPriceAsync(String product) {
         CompletableFuture<Double> futurePrice = new CompletableFuture<>();
