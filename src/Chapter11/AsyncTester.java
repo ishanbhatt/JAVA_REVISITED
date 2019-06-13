@@ -130,5 +130,6 @@ public class AsyncTester {
 
         System.out.println("USE PARALLEL STREAM FOR CPU BOUND TASKS AND COMPARABLEFUTURE FOR IO BOUND");
 
+
     }
 }

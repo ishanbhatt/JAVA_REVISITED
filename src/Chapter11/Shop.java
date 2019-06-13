@@ -66,4 +66,11 @@ public class Shop {
                 () -> calculatePrice(product));
 //        This is as good as the method above with all exception handling and all
     }
+
+
+    public String getPriceDiscount(String product) {
+        double price = calculatePrice(product);
+        Discount.Code code = Discount.Code.values()[new Random().nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", name, price, code);  // name is the name of the shop
+    }
 }
